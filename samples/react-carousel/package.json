@@ -41,10 +41,10 @@
   },
   "devDependencies": {
     "@microsoft/rush-stack-compiler-3.3": "~0.2.x",
-    "@microsoft/sp-build-web": "1.8.2-plusbeta",
+    "@microsoft/sp-build-web": "1.16.1",
     "@microsoft/sp-module-interfaces": "1.8.2-plusbeta",
     "@microsoft/sp-tslint-rules": "1.8.2-plusbeta",
-    "@microsoft/sp-webpart-workbench": "1.8.2-plusbeta",
+    "@microsoft/sp-webpart-workbench": "1.12.1",
     "@types/chai": "3.4.34",
     "@types/mocha": "2.2.38",
     "@types/react": "^16.7.22",
