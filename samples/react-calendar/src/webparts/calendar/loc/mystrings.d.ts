@@ -26,7 +26,8 @@ declare interface ICalendarWebPartStrings {
   EnDateValidationMessage: string;
   SartDateValidationMessage: string;
   eventSelectDatesLabel: string;
-  ConfirmeDeleteMessage: string;
+  ConfirmeDeleteAllRecurrrencesMessage: string;
+  ConfirmeDeleteOneRecurrenceMessage: string;
   DialogConfirmDeleteTitle: string;
   SpinnerDeletingLabel: string;
   DialogCloseButtonLabel: string;
@@ -47,9 +48,9 @@ declare interface ICalendarWebPartStrings {
   NextMonth: string;
   PrevMonth: string;
   GoToDay: string;
-  ShortDay_Saunday: string;
+  ShortDay_Sunday: string;
   ShortDay_Friday: string;
-  ShortDay_Tursday: string;
+  ShortDay_Thursday: string;
   ShortDay_W: string;
   ShortDay_T: string;
   ShortDay_M: string;
@@ -101,9 +102,9 @@ declare interface ICalendarWebPartStrings {
   EventPanelTitle: string;
   PropertyPaneDescription: string;
   BasicGroupName: string;
-  DescriptionFieldLabel: string;
   SiteUrlFieldLabel: string;
   ListFieldLabel: string;
+  yearHeaderLabel: string;
   monthLabel: string;
   weekLabel: string;
   dayLable: string;
@@ -112,6 +113,31 @@ declare interface ICalendarWebPartStrings {
   previousLabel: string;
   nextLabel: string;
   showMore: string;
+  recurrenceEventLabel: string;
+  editRecurrenceSeries: string;
+  allDayEventLabel: string;
+  ifRecurrenceLabel: string;
+  onLabel: string;
+  offLabel: string;
+  eventDescriptionLabel: string;
+  recurrenceInformationLabel: string;
+  dailyLabel: string;
+  weeklyLabel: string;
+  monthlyLabel: string;
+  yearlyLabel: string;
+  patternLabel: string;
+  dateRangeLabel: string;
+  occurrencesLabel: string;
+  ofMonthLabel:string;
+  everyFormat: string;
+  everySecondFormat: string;
+  everyNthFormat: string;
+  onTheDayFormat: string;
+  onTheLabel: string;
+  theSuffix: string;
+  yearLabel: string;
+  theNthOfMonthFormat: string;
+  onTheDayTypeFormat: string;
 }
 
 declare module 'CalendarWebPartStrings' {

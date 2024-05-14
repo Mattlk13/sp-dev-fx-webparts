@@ -1,7 +1,22 @@
-# SharePoint Framework webpart sample using React, Redux and ImmutableJS
+---
+page_type: sample
+products:
+- office-sp
+languages:
+- javascript
+- typescript
+extensions:
+  contentType: samples
+  technologies:
+  - SharePoint Framework
+  platforms:
+  - react
+  createdDate: 8/1/2017 12:00:00 AM
+---
+# SharePoint Framework web part sample using React, Redux and ImmutableJS
 
 ## Summary
-SharePoint Framework webpart which uses [Redux](http://redux.js.org/) to maintain a single state for the entire application and [ImmutableJS](https://facebook.github.io/immutable-js/) to create performant state trees.
+SharePoint Framework web part which uses [Redux](http://redux.js.org/) to maintain a single state for the entire application and [ImmutableJS](https://facebook.github.io/immutable-js/) to create performant state trees.
 
 Redux AJAX actions are used together with the SharePoint REST API to display lists in your site. You can also add a new list to the site from this webpart.
 
@@ -14,8 +29,8 @@ More details in my post here: [Using Redux Async Actions and ImmutableJS in Shar
 
 ## Applies to
 
-* [SharePoint Framework](https:/dev.office.com/sharepoint)
-* [Office 365 tenant](https://dev.office.com/sharepoint/docs/spfx/set-up-your-development-environment)
+* [SharePoint Framework](https://docs.microsoft.com/sharepoint/dev/spfx/sharepoint-framework-overview)
+* [Office 365 tenant](https://docs.microsoft.com/sharepoint/dev/spfx/set-up-your-development-environment)
 
 ## Solution
 
@@ -30,6 +45,7 @@ Version|Date|Comments
 1.0|July 11, 2017|Initial release
 
 ## Disclaimer
+
 **THIS CODE IS PROVIDED *AS IS* WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING ANY IMPLIED WARRANTIES OF FITNESS FOR A PARTICULAR PURPOSE, MERCHANTABILITY, OR NON-INFRINGEMENT.**
 
 ---

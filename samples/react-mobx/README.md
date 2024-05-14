@@ -1,7 +1,22 @@
-# Webpart with React and Mobx
+---
+page_type: sample
+products:
+- office-sp
+languages:
+- javascript
+- typescript
+extensions:
+  contentType: samples
+  technologies:
+  - SharePoint Framework
+  platforms:
+  - React
+  createdDate: 1/1/2016 12:00:00 AM
+---
+# Using Mobx
 
 ## Summary
-Sample webpart implementation that uses [Mobx](https://github.com/mobxjs/mobx) to keep track of its state.
+Sample web part implementation that uses [Mobx](https://github.com/mobxjs/mobx) to keep track of its state.
 
 ### Reactive
 ![](https://i.gyazo.com/e6f1903b9a9c8201985cd25cc1fe28bc.gif)
@@ -14,8 +29,8 @@ Sample webpart implementation that uses [Mobx](https://github.com/mobxjs/mobx) t
 
 ## Applies to
 
-* [SharePoint Framework Developer Preview](http://dev.office.com/sharepoint/docs/spfx/sharepoint-framework-overview)
-* [Office 365 developer tenant](http://dev.office.com/sharepoint/docs/spfx/set-up-your-developer-tenant)
+* [SharePoint Framework Developer Preview](https://docs.microsoft.com/sharepoint/dev/spfx/sharepoint-framework-overview)
+* [Office 365 developer tenant](https://docs.microsoft.com/sharepoint/dev/spfx/set-up-your-developer-tenant)
 
 ## Solution
 
@@ -30,6 +45,7 @@ Version|Date|Comments
 1.0|November 4, 2016|Initial release
 
 ## Disclaimer
+
 **THIS CODE IS PROVIDED *AS IS* WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING ANY IMPLIED WARRANTIES OF FITNESS FOR A PARTICULAR PURPOSE, MERCHANTABILITY, OR NON-INFRINGEMENT.**
 
 ---
@@ -47,6 +63,6 @@ $ gulp serve
 
 * Presentational (dumb) components live in `./components`
 * Container (smart) components live in `./container`
-* Mobx stores are defined in `./store` with a sample webpart store that keeps track of the webpart properties.
+* Mobx stores are defined in `./store` with a sample web part store that keeps track of the web part properties.
 
 <img src="https://telemetry.sharepointpnp.com/sp-dev-fx-webparts/samples/react-mobx" />

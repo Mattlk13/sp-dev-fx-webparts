@@ -1,13 +1,28 @@
-# Display Employee Spotlight JavaScript Client-Side Web Part
+---
+page_type: sample
+products:
+- office-sp
+languages:
+- javascript
+- typescript
+extensions:
+  contentType: samples
+  technologies:
+  - SharePoint Framework
+  platforms:
+  - react
+  createdDate: 8/1/2017 12:00:00 AM
+---
+# Employee Spotlight
 
 ## Summary
 Simple Web Part that demonstrates the use of SharePoint Framework for show casing Employee Spotlight. The web part pulls data from a configured list and User Profile service.
- The properties pane for this web part has 5 canscading dropdowns. 
+ The properties pane for this web part has 5 cascading dropdowns. 
  - A drop down list of sites(webs) in the current site collection.
  - A drop down list of list titles in the selected site(web). 
  - 3 drop downs with list of field names from selected list, which includes 
     * Name(Person or Group Column). 
-    * Splotlight Description (Multiline - Enriched text Column). 
+    * Spotlight Description (Multiline - Enriched text Column). 
     * Expiry date for Spotlight event (DateTime Column with Date only option).  
  - The properties pane also has options for following slider effects.
     * Background color - A color picker to choose Slider background color 
@@ -24,11 +39,11 @@ Simple Web Part that demonstrates the use of SharePoint Framework for show casin
 > Data is displayed only when hosted in SharePoint. No mock data included at this point for local testing. 
 
 ## Used SharePoint Framework Version
-![drop](https://img.shields.io/badge/drop-GA-green.svg)
+![drop](https://img.shields.io/badge/drop-1.8.0-green.svg)
 
 ## Applies to
-* [SharePoint Framework Developer](http://dev.office.com/sharepoint/docs/spfx/sharepoint-framework-overview)
-* [Office 365 developer tenant](http://dev.office.com/sharepoint/docs/spfx/set-up-your-developer-tenant)
+* [SharePoint Framework Developer](https://docs.microsoft.com/sharepoint/dev/spfx/sharepoint-framework-overview)
+* [Office 365 developer tenant](https://docs.microsoft.com/sharepoint/dev/spfx/set-up-your-developer-tenant)
 
 
 ## Solution
@@ -46,6 +61,7 @@ Version|Date|Comments
 
 
 ## Disclaimer
+
 **THIS CODE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING ANY IMPLIED WARRANTIES OF FITNESS FOR A PARTICULAR PURPOSE, MERCHANTABILITY, OR NON-INFRINGEMENT.**
 
 
@@ -70,7 +86,7 @@ This Web Part illustrates the following concepts on top of the SharePoint Framew
     - the titles webs in current sitecollection 
     - titles of the lists in the selected web 
     - fields of a selected list
-* Use of a third party control(sp-client-custom-fields) for selecting webpart foregroud and background colors.
+* Use of a third party control(sp-client-custom-fields) for selecting web part foreground and background colors.
 * Use of switch, slider controls to configure slider speed and auto scrolling.
 * Using a javascript slider. 
 * Fetching the user details from User Profile service like user designation, user profile image. 

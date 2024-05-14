@@ -1,4 +1,19 @@
-# title of the sample
+---
+page_type: sample
+products:
+- office-sp
+languages:
+- javascript
+- typescript
+extensions:
+  contentType: samples
+  technologies:
+  - SharePoint Framework
+  platforms:
+  - Knockout
+  createdDate: 1/1/2016 12:00:00 AM
+---
+# Dependent Property Pane Properties
 
 ## Summary
 Sample Web Part illustrating
@@ -13,7 +28,7 @@ Sample Web Part illustrating
 
 ## Applies to
 
-* [SharePoint Framework Developer Preview](http://dev.office.com/sharepoint/docs/spfx/sharepoint-framework-overview)
+* [SharePoint Framework Developer Preview](https://docs.microsoft.com/sharepoint/dev/spfx/sharepoint-framework-overview)
 
 ## Solution
 
@@ -47,7 +62,7 @@ This project contains Client-Side Web Part built on the SharePoint Framework ill
 This Web Part illustrates the following concepts on top of the SharePoint Framework:
 
 - loading Lists and Views data from SharePoint REST API
-- creating cust Knockout data bindings
+- creating custom Knockout data bindings
 - creating custom Knockout components
 - styling components to match Fabric UI experience
 - creating custom Property Pane fields (custom markup, logic) based on Knockout.js framework

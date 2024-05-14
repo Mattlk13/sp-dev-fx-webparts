@@ -1,6 +1,23 @@
-## Bootstrap Slider Built with jQueryr v1.x and Boostrap v3.x
+---
+page_type: sample
+products:
+- office-sp
+- office-365
+languages:
+- javascript
+- typescript
+extensions:
+  contentType: samples
+  technologies:
+  - SharePoint Framework
+  platforms:
+  - jQuery
+  createdDate: 5/1/2017 12:00:00 AM
+---
+# Bootstrap Slider Built with jQuery v1.x and Boostrap v3.x
 
 ## Summary
+
 Sample bootstrap slider which pulls the slides from a list inside the SharePoint site. The list is automatically deployed once the app is installed in the SharePoint site.
 
 ![First Slider Image](./assets/slider_image_1.png)
@@ -10,18 +27,19 @@ Sample bootstrap slider which pulls the slides from a list inside the SharePoint
 ![Deployed List](./assets/List.png)
 
 ## Used SharePoint Framework Version
+
 ![drop](https://img.shields.io/badge/drop-ga-green.svg)
 
 ## Applies to
 
-* [SharePoint Framework Developer GA](http://dev.office.com/sharepoint/docs/spfx/sharepoint-framework-overview)
-* [Office 365 developer tenant](http://dev.office.com/sharepoint/docs/spfx/set-up-your-developer-tenant)
+* [SharePoint Framework Developer GA](https://docs.microsoft.com/sharepoint/dev/spfx/sharepoint-framework-overview)
+* [Office 365 developer tenant](https://docs.microsoft.com/sharepoint/dev/spfx/set-up-your-developer-tenant)
 
 ## Solution
 
 Solution|Author(s)
 --------|---------
-bootstrap-slider|David Hartman ([Slalom](https://slalom.com))
+bootstrap-slider|[David Hartman](https://github.com/davidhartman) ([Slalom](https://slalom.com))
 
 ## Version History
 
@@ -30,11 +48,13 @@ Version|Date|Comments
 1.0|April 25th, 2017|Initial Release
 
 ## Disclaimer
+
 **THIS CODE IS PROVIDED *AS IS* WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING ANY IMPLIED WARRANTIES OF FITNESS FOR A PARTICULAR PURPOSE, MERCHANTABILITY, OR NON-INFRINGEMENT.**
 
 ---
 
 ## Configuration Bliss
+
 - clone this repo
 - in write-manifests.json
  - fill in the correct CDN path
@@ -48,7 +68,15 @@ Version|Date|Comments
 - add the app to your SharePoint Online site
  - When the app is finished installing you should see a **SPFx List** in the **Site Contents** of the site
  ![Deployed List](./assets/List.png)
-- Add items to the **SPFx List** inorder for slides to display in the webpart
+- Add items to the **SPFx List** in order for slides to display in the web part
+
+## Support
+
+If you encounter any issues while using this sample, [create a new issue](https://github.com/pnp/sp-dev-fx-webparts/issues/new?assignees=&labels=Needs%3A+Triage+%3Amag%3A%2Ctype%3Abug-suspected&template=bug-report.yml&sample=bootstrap-slider=@davidhartman&title=angular-todo%20-%20).
+
+For questions regarding this sample, [create a new question](https://github.com/pnp/sp-dev-fx-webparts/issues/new?assignees=&labels=Needs%3A+Triage+%3Amag%3A%2Ctype%3Abug-suspected&template=question.yml&sample=bootstrap-slider=@davidhartman&title=angular-todo%20-%20).
+
+Finally, if you have an idea for improvement, [make a suggestion](https://github.com/pnp/sp-dev-fx-webparts/issues/new?assignees=&labels=Needs%3A+Triage+%3Amag%3A%2Ctype%3Abug-suspected&template=suggestion.yml&sample=bootstrap-slider=@davidhartman&title=angular-todo%20-%20).
 
 <img src="https://telemetry.sharepointpnp.com/sp-dev-fx-webparts/samples/bootstrap-slider" />
 

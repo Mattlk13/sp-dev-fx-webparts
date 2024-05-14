@@ -1,7 +1,7 @@
-# SPFx webpart with Taxonomy picker Office UI Fabric Panel.
+# SPFx web part with Taxonomy picker Office UI Fabric Panel.
 
 ## Summary
-Sample webpart with Single and Multi-select taxonomy pickers using Office UI Fabric panel. The webpart uses the Taxonomy API support available in the @pnp/taxonomy.
+Sample web part with Single and Multi-select taxonomy pickers using Office UI Fabric panel. The web part uses the Taxonomy API support available in the @pnp/taxonomy.
 
 
 ![TaxonomyPickerPanel webpart](https://github.com/vipulkelkar/sp-dev-fx-webparts/blob/TaxonomyPanelPicker/samples/react-taxonomypicker-panel/assets/TaxonomyPicker.gif)
@@ -12,8 +12,8 @@ Sample webpart with Single and Multi-select taxonomy pickers using Office UI Fab
 
 ## Applies to
 
-* [SharePoint Framework](https:/dev.office.com/sharepoint)
-* [Office 365 tenant](https://dev.office.com/sharepoint/docs/spfx/set-up-your-development-environment)
+* [SharePoint Framework](https://docs.microsoft.com/sharepoint/dev/spfx/sharepoint-framework-overview)
+* [Office 365 tenant](https://docs.microsoft.com/sharepoint/dev/spfx/set-up-your-development-environment)
 
 ## Prerequisites
  
@@ -34,6 +34,7 @@ Version|Date|Comments
 1.1|August 20, 2018|Bug fix and version upgrade
 
 ## Disclaimer
+
 **THIS CODE IS PROVIDED *AS IS* WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING ANY IMPLIED WARRANTIES OF FITNESS FOR A PARTICULAR PURPOSE, MERCHANTABILITY, OR NON-INFRINGEMENT.**
 
 ---
@@ -59,9 +60,9 @@ Version|Date|Comments
 
 ## Features
 
-- This webpart demonstrates the use of a custom taxonomy picker control built with Office UI Fabric React Panel and Tagpicker that enables users to select terms for a single-select or multi-select taxonomy field in a controlled manner.
+- This web part demonstrates the use of a custom taxonomy picker control built with Office UI Fabric React Panel and Tagpicker that enables users to select terms for a single-select or multi-select taxonomy field in a controlled manner.
 
-- The custom taxonomy picker control is a reusable React component and can be easily placed in a SPFx webpart just by providing the TermSetId as a property to the component.
+- The custom taxonomy picker control is a reusable React component and can be easily placed in a SPFx web part just by providing the TermSetId as a property to the component.
 
   <TermsPickerComponent IsMultiValue={false} TermSetId='<TERM-SET-ID>' LabelText='Single-select field' SelectedTerms={<State variable>}/>
 

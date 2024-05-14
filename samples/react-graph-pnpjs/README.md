@@ -1,19 +1,19 @@
-# React sample showing the use of PnPJS with MS Graph
+# Using PnPJS with Microsoft Graph
 
 ## Summary
-This webpart demonstrates how to use [PnPJS](https://pnp.github.io/pnpjs/) with SharePoint Framework and how to query [Microsoft Graph](https://docs.microsoft.com/en-us/graph/overview) with PnPJS.
+This web part demonstrates how to use [PnPJS](https://pnp.github.io/pnpjs/) with SharePoint Framework and how to query [Microsoft Graph](https://docs.microsoft.com/en-us/graph/overview) with PnPJS.
 It requests a list of Azure AD [groups](https://docs.microsoft.com/en-us/graph/api/group-list?view=graph-rest-1.0) at your tenant and shows them using [Office UI Fabric React](https://developer.microsoft.com/en-us/fabric#/components) list.
 
 ![Main UI](./assets/summary.png)
 
 
 ## Used SharePoint Framework Version 
-![drop](https://img.shields.io/badge/drop-1.7.1-green.svg)
+![1.7.1](https://img.shields.io/badge/drop-1.7.1-green.svg)
 
 
 ## Applies to
-* [SharePoint Framework](http://dev.office.com/sharepoint/docs/spfx/sharepoint-framework-overview)
-* [Office 365 developer tenant](http://dev.office.com/sharepoint/docs/spfx/set-up-your-developer-tenant)
+* [SharePoint Framework](https://docs.microsoft.com/sharepoint/dev/spfx/sharepoint-framework-overview)
+* [Office 365 developer tenant](https://docs.microsoft.com/sharepoint/dev/spfx/set-up-your-developer-tenant)
 
 ## Solution
 
@@ -28,6 +28,7 @@ Version|Date|Comments
 1.0|Jan 09, 2019|Initial release
 
 ## Disclaimer
+
 **THIS CODE IS PROVIDED *AS IS* WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING ANY IMPLIED WARRANTIES OF FITNESS FOR A PARTICULAR PURPOSE, MERCHANTABILITY, OR NON-INFRINGEMENT.**
 
 ---

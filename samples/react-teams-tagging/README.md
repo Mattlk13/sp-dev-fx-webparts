@@ -1,7 +1,7 @@
-# spfx webpart to Tag Teams using a TermSet in SharePoint
+# spfx web part to Tag Teams using a TermSet in SharePoint
 
 ## Summary
-This sample shows how read and update a custom Schema extension in MS Graph to Tag a Team using metadata from a specific TermSet in SharePoint. The user can select different Terms (up to 3), and are saved as a custom Schema extension in Group Graph entity. Besides, the webpart allows to find other Teams tagged wit the same Tag (for demo puposes only 1st Tag is used to run the query)
+This sample shows how read and update a custom Schema extension in MS Graph to Tag a Team using metadata from a specific TermSet in SharePoint. The user can select different Terms (up to 3), and are saved as a custom Schema extension in Group Graph entity. Besides, the web part allows to find other Teams tagged wit the same Tag (for demo puposes only 1st Tag is used to run the query)
 
 ![Custom Schema Extension Webpart](./assets/webpart.JPG)
 
@@ -11,8 +11,8 @@ This sample shows how read and update a custom Schema extension in MS Graph to T
 
 ## Applies to
 
-* [SharePoint Framework Developer](http://dev.office.com/sharepoint/docs/spfx/sharepoint-framework-overview)
-* [Office 365 developer tenant](http://dev.office.com/sharepoint/docs/spfx/set-up-your-developer-tenant)
+* [SharePoint Framework Developer](https://docs.microsoft.com/sharepoint/dev/spfx/sharepoint-framework-overview)
+* [Office 365 developer tenant](https://docs.microsoft.com/sharepoint/dev/spfx/set-up-your-developer-tenant)
 
 ## Solution
 

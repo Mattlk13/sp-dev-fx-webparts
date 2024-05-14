@@ -1,13 +1,13 @@
 import * as React from 'react';
 import * as ReactDom from 'react-dom';
 import { DisplayMode, Environment, EnvironmentType, Version } from '@microsoft/sp-core-library';
+import { BaseClientSideWebPart } from "@microsoft/sp-webpart-base";
+
 import {
-  BaseClientSideWebPart,
-  IPropertyPaneConfiguration,
-  PropertyPaneTextField,
-  PropertyPaneDropdown,
-  PropertyPaneToggle
-} from '@microsoft/sp-webpart-base';
+  IPropertyPaneConfiguration, PropertyPaneDropdown,
+  PropertyPaneTextField, PropertyPaneToggle, IPropertyPaneField
+} from "@microsoft/sp-property-pane";
+import { initializeIcons } from '@uifabric/icons';
 
 import * as strings from 'ListFormWebPartStrings';
 import ListForm from './components/ListForm';
@@ -24,6 +24,7 @@ import { update, get } from '@microsoft/sp-lodash-subset';
 import { ListService } from '../../common/services/ListService';
 import { ControlMode } from '../../common/datatypes/ControlMode';
 
+initializeIcons();
 
 export default class ListFormWebPart extends BaseClientSideWebPart<IListFormWebPartProps> {
 
@@ -33,6 +34,29 @@ export default class ListFormWebPart extends BaseClientSideWebPart<IListFormWebP
   protected onInit(): Promise<void> {
     return super.onInit().then((_) => {
       this.listService = new ListService(this.context.spHttpClient);
+      //Polyfill array find
+      if (!Array.prototype["find"]) {
+        Array.prototype["find"] = function (predicate, argument) {
+          if (this == null) {
+            throw new TypeError('Array.prototype.find called on null or undefined');
+          }
+          if (typeof predicate !== 'function') {
+            throw new TypeError('predicate must be a function');
+          }
+          var list = Object(this);
+          var length = list.length >>> 0;
+          var thisArg = argument;
+          var value;
+
+          for (var i = 0; i < length; i++) {
+            value = list[i];
+            if (predicate.call(thisArg, value, i, list)) {
+              return value;
+            }
+          }
+          return undefined;
+        };
+      }
     });
   }
 
@@ -73,6 +97,7 @@ export default class ListFormWebPart extends BaseClientSideWebPart<IListFormWebP
           showUnsupportedFields: this.properties.showUnsupportedFields,
           onSubmitSucceeded: (id: number) => this.formSubmitted(id),
           onUpdateFields: (fields: IFieldConfiguration[]) => this.updateField(fields),
+          context: this.context,
         }
       );
     } else {
@@ -137,7 +162,7 @@ export default class ListFormWebPart extends BaseClientSideWebPart<IListFormWebP
       PropertyPaneToggle('showUnsupportedFields', {
         label: strings.ShowUnsupportedFieldsLabel,
         disabled: !this.properties.listUrl
-      })
+      }) as IPropertyPaneField<any> // for some reasong the PropertyPaneToggle was not being accepted as IPropertyPaneField<any>
     );
     mainGroup.groupFields.push(
       PropertyPaneTextField('redirectUrl', {

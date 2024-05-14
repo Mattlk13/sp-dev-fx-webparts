@@ -1,22 +1,40 @@
+---
+page_type: sample
+products:
+- office-sp
+- office-365
+languages:
+- javascript
+- typescript
+extensions:
+  contentType: samples
+  technologies:
+  - SharePoint Framework
+  platforms:
+  - AngularJS
+  createdDate: 1/8/2019 12:00:00 AM
+---
+
 # Angular Elements with HTML Template File in SharePoint Framework
 
 ## Summary
 
 A sample web part illustrating how to use Angular Elements in the SharePoint Framework with the help of separate template HTML File.
 
-## Used SharePoint Framework Version 
+## Used SharePoint Framework Version
+ 
 ![drop](https://img.shields.io/badge/drop-1.4.1-green.svg)
 
 ## Applies to
 
-* [SharePoint Framework](http://dev.office.com/sharepoint/docs/spfx/sharepoint-framework-overview)
-* [Office 365 developer tenant](http://dev.office.com/sharepoint/docs/spfx/set-up-your-developer-tenant)
+* [SharePoint Framework](https://docs.microsoft.com/sharepoint/dev/spfx/sharepoint-framework-overview)
+* [Office 365 developer tenant](https://docs.microsoft.com/sharepoint/dev/spfx/set-up-your-developer-tenant)
 
 ## Solution
 
 Solution|Author(s)
 --------|---------
-angularelements-html-templatefile| Jayakumar Balasubramaniam (C# Corner MVP, Hubfly, @jayakumrB)
+angularelements-html-templatefile| [Jayakumar Balasubramaniam](https://github.com/JayakumarB) (C# Corner MVP, Hubfly, [@jayakumrB](https://twitter.com/jayakumrB))
 
 ## Version history
 
@@ -48,7 +66,7 @@ This web part illustrates the following concepts on top of the SharePoint Framew
 ## Implementation
 
 The below piece of code in gulpfile.js is the key to update the build pipeline:
-```
+```typescript
 //************START: Added to handle Template file url ************/
 
 var inlineNgxTemplate = require('gulp-inline-ngx-template');
@@ -66,6 +84,14 @@ build.rig.addPostTypescriptTask(tsInlines);
 
 //************END: Added to handle Template file url ************/
 ```
+
+## Support
+
+If you encounter any issues while using this sample, [create a new issue](https://github.com/pnp/sp-dev-fx-webparts/issues/new?assignees=&labels=Needs%3A+Triage+%3Amag%3A%2Ctype%3Abug-suspected&template=bug-report.yml&sample=angularelements-html-templatefile=@JayakumarB&title=angular-todo%20-%20).
+
+For questions regarding this sample, [create a new question](https://github.com/pnp/sp-dev-fx-webparts/issues/new?assignees=&labels=Needs%3A+Triage+%3Amag%3A%2Ctype%3Abug-suspected&template=question.yml&sample=angularelements-html-templatefile=@JayakumarB&title=angular-todo%20-%20).
+
+Finally, if you have an idea for improvement, [make a suggestion](https://github.com/pnp/sp-dev-fx-webparts/issues/new?assignees=&labels=Needs%3A+Triage+%3Amag%3A%2Ctype%3Abug-suspected&template=suggestion.yml&sample=angularelements-html-templatefile=@JayakumarB&title=angular-todo%20-%20).
 
 
 <img src="https://telemetry.sharepointpnp.com/sp-dev-fx-webparts/samples/angularelements-helloworld" />

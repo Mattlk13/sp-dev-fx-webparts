@@ -23,18 +23,18 @@ function displayTasks() {
     editable: true,
     timezone: "UTC",
     droppable: true, // this allows things to be dropped onto the calendar
-    // update the end date when a user drags and drops an event 
+    // update the end date when a user drags and drops an event
     eventDrop: function (event, delta, revertFunc) {
       updateTask(event.id, event.start, event.end);
     },
-    // put the events on the calendar 
+    // put the events on the calendar
     events: function (start, end, timezone, callback) {
       var startDate = start.format('YYYY-MM-DD');
       var endDate = end.format('YYYY-MM-DD');
 
       var restQuery = "/_api/Web/Lists/GetByTitle('" + TASK_LIST + "')/items?$select=ID,Title,\
-Status,StartDate,DueDate,AssignedTo/Title&$expand=AssignedTo&\
-$filter=((DueDate ge '" + startDate + "' and DueDate le '" + endDate + "')or(StartDate ge '" + startDate + "' and StartDate le '" + endDate + "'))";
+              Status,StartDate,DueDate,AssignedTo/Title&$expand=AssignedTo&\
+              $filter=((DueDate ge '" + startDate + "' and DueDate le '" + endDate + "')or(StartDate ge '" + startDate + "' and StartDate le '" + endDate + "'))";
 
       $.ajax({
         url: window.webAbsoluteUrl + restQuery,
@@ -65,7 +65,7 @@ $filter=((DueDate ge '" + startDate + "' and DueDate le '" + endDate + "')or(Sta
             return {
               title: task.Title + " - " + assignedTo,
               id: task.ID,
-              color: color, // specify the background color and border color can also create a class and use className paramter. 
+              color: color, // specify the background color and border color can also create a class and use className parameter.
               start: moment.utc(task.StartDate).add("1", "days"),
               end: moment.utc(task.DueDate).add("1", "days") // add one day to end date so that calendar properly shows event ending on that day
             };
@@ -97,7 +97,7 @@ function updateTask(id, startDate, dueDate) {
     .then(function (data, textStatus, jqXHR) {
       return $.ajax({
         url: window.webAbsoluteUrl +
-        "/_api/Web/Lists/getByTitle('" + TASK_LIST + "')/Items(" + id + ")",
+          "/_api/Web/Lists/getByTitle('" + TASK_LIST + "')/Items(" + id + ")",
         type: 'POST',
         data: JSON.stringify({
           StartDate: sDate,

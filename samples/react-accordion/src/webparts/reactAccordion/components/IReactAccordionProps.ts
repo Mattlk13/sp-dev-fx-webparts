@@ -5,8 +5,10 @@ export interface IReactAccordionProps {
   listName: string;
   spHttpClient: SPHttpClient;
   siteUrl: string;
-  title: string,
-  displayMode: DisplayMode,
-  maxItemsPerPage: number,
+  title: string;
+  displayMode: DisplayMode;
+  maxItemsPerPage: number;
+  enablePaging:boolean;
+  totalItems:number;
   updateProperty: (value: string) => void;
 }

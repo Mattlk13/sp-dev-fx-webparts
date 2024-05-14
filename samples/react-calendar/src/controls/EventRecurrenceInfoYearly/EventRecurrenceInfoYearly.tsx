@@ -15,7 +15,7 @@ import {
   MaskedTextField
 } from 'office-ui-fabric-react';
 import { DatePicker, DayOfWeek, IDatePickerStrings } from 'office-ui-fabric-react/lib/DatePicker';
-
+import { toLocaleShortDateString }  from '../../utils/dateUtils';
 import spservices from '../../services/spservices';
 
 const DayPickerStrings: IDatePickerStrings = {
@@ -207,7 +207,7 @@ export class EventRecurrenceInfoYearly extends React.Component<IEventRecurrenceI
    * @memberof EventRecurrenceInfoYearly
    */
   private onWeekOrderMonthChange(ev: React.FormEvent<HTMLDivElement>, item: IDropdownOption): void {
-    this.setState({ selectedWeekOrderMonth: item.text });
+    this.setState({ selectedWeekOrderMonth: item.key.toString() });
     this.applyRecurrence();
   }
 
@@ -232,7 +232,7 @@ export class EventRecurrenceInfoYearly extends React.Component<IEventRecurrenceI
    * @memberof EventRecurrenceInfoYearly
    */
   private onSelectedWeekDayChange(ev: React.FormEvent<HTMLDivElement>, item: IDropdownOption): void {
-    this.setState({ selectedWeekDay: item.text });
+    this.setState({ selectedWeekDay: item.key.toString() });
     this.applyRecurrence();
   }
 
@@ -354,10 +354,7 @@ export class EventRecurrenceInfoYearly extends React.Component<IEventRecurrenceI
    * @memberof EventRecurrenceInfoDaily
    */
   private async applyRecurrence() {
-
-    const siteTimeZoneHours: number = await this.spService.getSiteTimeZoneHours(this.props.siteUrl);
-    const eventDate = new Date(moment(this.state.startDate).add(siteTimeZoneHours, 'hours').toISOString());
-    const endDate = moment(this.state.endDate).add(siteTimeZoneHours, 'hours').toISOString();
+    const endDate = await this.spService.getUtcTime(this.state.endDate);
     let selectDateRangeOption;
     switch (this.state.selectdateRangeOption) {
       case 'noDate':
@@ -526,7 +523,7 @@ export class EventRecurrenceInfoYearly extends React.Component<IEventRecurrenceI
                               ]}
                             />
                           </div>
-                          <Label styles={{ root: { display: 'inline-block', verticalAlign: 'top', width: '30px', paddingLeft: '10px' } }}>of</Label>
+                          <Label styles={{ root: { display: 'inline-block', verticalAlign: 'top', width: '30px', paddingLeft: '10px' } }}>{ strings.ofMonthLabel} </Label>
                           <div style={{ display: 'inline-block', verticalAlign: 'top', width: '100px', paddingLeft: '5px' }}>
                             <Dropdown
                               selectedKey={this.state.selectedYearlyByDayMonth}
@@ -561,7 +558,7 @@ export class EventRecurrenceInfoYearly extends React.Component<IEventRecurrenceI
             </div>
 
             <div style={{ paddingTop: '22px' }}>
-              <Label>Date Range</Label>
+              <Label>{ strings.dateRangeLabel }</Label>
               <div style={{ display: 'inline-block', verticalAlign: 'top', paddingRight: '35px', paddingTop: '10px' }}>
 
                 <DatePicker
@@ -572,6 +569,7 @@ export class EventRecurrenceInfoYearly extends React.Component<IEventRecurrenceI
                   label={strings.StartDateLabel}
                   value={this.state.startDate}
                   onSelectDate={this.onStartDateChange}
+                  formatDate={toLocaleShortDateString}
                 />
 
               </div>
@@ -598,6 +596,7 @@ export class EventRecurrenceInfoYearly extends React.Component<IEventRecurrenceI
                               ariaLabel={strings.StartDatePlaceHolder}
                               style={{ display: 'inline-block', verticalAlign: 'top', paddingLeft: '22px', }}
                               onSelectDate={this.onEndDateChange}
+                              formatDate={toLocaleShortDateString}
                               value={this.state.endDate}
                               disabled={this.state.disableEndDate}
                             />

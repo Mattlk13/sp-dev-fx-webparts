@@ -1,3 +1,18 @@
+---
+page_type: sample
+products:
+- office-sp
+languages:
+- javascript
+- typescript
+extensions:
+  contentType: samples
+  technologies:
+  - SharePoint Framework
+  platforms:
+  - AngularJS
+  createdDate: 10/21/2016 12:00:00 AM
+---
 # Migrating existing Angular applications to SharePoint Framework sample
 
 ## Summary
@@ -12,14 +27,14 @@ Application after migration:
 
 ## Applies to
 
-* [SharePoint Framework Developer Preview](http://dev.office.com/sharepoint/docs/spfx/sharepoint-framework-overview)
-* [Office 365 developer tenant](http://dev.office.com/sharepoint/docs/spfx/set-up-your-developer-tenant)
+* [SharePoint Framework Developer Preview](https://docs.microsoft.com/sharepoint/dev/spfx/sharepoint-framework-overview)
+* [Office 365 developer tenant](https://docs.microsoft.com/sharepoint/dev/spfx/set-up-your-developer-tenant)
 
 ## Solution
 
 Solution|Author(s)
 --------|---------
-angular-migration|Waldek Mastykarz (MVP, Rencore, @waldekm)
+angular-migration|[Waldek Mastykarz](https://github.com/waldekmastykarz) (MVP, Rencore, @waldekm)
 
 ## Version history
 
@@ -28,6 +43,7 @@ Version|Date|Comments
 1.0.0|October 21, 2016|Initial release
 
 ## Disclaimer
+
 **THIS CODE IS PROVIDED *AS IS* WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING ANY IMPLIED WARRANTIES OF FITNESS FOR A PARTICULAR PURPOSE, MERCHANTABILITY, OR NON-INFRINGEMENT.**
 
 ---
@@ -35,5 +51,13 @@ Version|Date|Comments
 Follow the setup instructions:
 - [Angular application](./angular-todo/README.md)
 - [SharePoint Framework client-side web part](./angular-todo-webpart/README.md)
+
+## Support
+
+If you encounter any issues while using this sample, [create a new issue](https://github.com/pnp/sp-dev-fx-webparts/issues/new?assignees=&labels=Needs%3A+Triage+%3Amag%3A%2Ctype%3Abug-suspected&template=bug-report.yml&sample=angular-migration&authors=@waldekmastykarz&title=angular-migration%20-%20).
+
+For questions regarding this sample, [create a new question](https://github.com/pnp/sp-dev-fx-webparts/issues/new?assignees=&labels=Needs%3A+Triage+%3Amag%3A%2Ctype%3Abug-suspected&template=question.yml&sample=angular-migration&authors=@waldekmastykarz&title=angular-migration%20-%20).
+
+Finally, if you have an idea for improvement, [make a suggestion](https://github.com/pnp/sp-dev-fx-webparts/issues/new?assignees=&labels=Needs%3A+Triage+%3Amag%3A%2Ctype%3Abug-suspected&template=suggestion.yml&sample=angular-migration&authors=@waldekmastykarz&title=angular-migration%20-%20).
 
 ![](https://telemetry.sharepointpnp.com/sp-dev-fx-webparts/samples/angular-migration)

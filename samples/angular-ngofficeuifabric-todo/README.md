@@ -1,25 +1,45 @@
-﻿# Angular & ngOfficeUIFabric Client-Side Web Part
+---
+page_type: sample
+products:
+- office-sp
+- office-365
+languages:
+- javascript
+- typescript
+extensions:
+  contentType: samples
+  technologies:
+  - SharePoint Framework
+  - Office UI Fabric
+  platforms:
+  - AngularJS
+  createdDate: 8/29/2016 12:00:00 AM
+  scenarios:
+  - Embed
+---
+# Angular & ngOfficeUIFabric Client-Side Web Part
 
 ## Summary
 
-this is a sample web part that illustrates the use of Angular and [ngOfficeUIFabric](http://ngofficeuifabric.com/) with the SharePoint Framework.
+this is a sample web part that illustrates the use of Angular and [ngOfficeUIFabric](https://github.com/ngOfficeUIFabric) with the SharePoint Framework.
 You can find a video recording walk-through this sample from [SharePoint PnP YouTube channel](https://www.youtube.com/watch?v=FS-_0KENJkI).
 
 ![Sample To do SharePoint Framework Client-Side Web Part built using Angular and ngOfficeUIFabric](./assets/preview.png)
 
-## Used SharePoint Framework Version 
+## Used SharePoint Framework Version
+ 
 ![drop](https://img.shields.io/badge/drop-drop2-red.svg)
 
 ## Applies to
 
-* [SharePoint Framework Developer Preview](http://dev.office.com/sharepoint/docs/spfx/sharepoint-framework-overview)
-* [Office 365 developer tenant](http://dev.office.com/sharepoint/docs/spfx/set-up-your-developer-tenant)
+* [SharePoint Framework Developer Preview](https://docs.microsoft.com/sharepoint/dev/spfx/sharepoint-framework-overview)
+* [Office 365 developer tenant](https://docs.microsoft.com/sharepoint/dev/spfx/set-up-your-developer-tenant)
 
 ## Solution
 
 Solution|Author(s)
 --------|---------
-angular-ngofficeuifabric-todo|Waldek Mastykarz (MVP, Rencore, @waldekm)
+angular-ngofficeuifabric-todo|[Waldek Mastykarz](https://github.com/waldekmastykarz) (MVP, Rencore, @waldekm)
 
 ## Version history
 
@@ -29,6 +49,7 @@ Version|Date|Comments
 1.0|August 29, 2016|Initial release
 
 ## Disclaimer
+
 **THIS CODE IS PROVIDED *AS IS* WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING ANY IMPLIED WARRANTIES OF FITNESS FOR A PARTICULAR PURPOSE, MERCHANTABILITY, OR NON-INFRINGEMENT.**
 
 ---
@@ -55,5 +76,13 @@ This web part illustrates the following concepts on top of the SharePoint Framew
 - using non-reactive web part property pane
 - using conditional rendering for one-time web part setup
 - passing web part configuration to Angular and reacting to configuration changes
+
+## Support
+
+If you encounter any issues while using this sample, [create a new issue](https://github.com/pnp/sp-dev-fx-webparts/issues/new?assignees=&labels=Needs%3A+Triage+%3Amag%3A%2Ctype%3Abug-suspected&template=bug-report.yml&sample=angular-ngofficeuifabric-todo&authors=@waldekmastykarz&title=angular-ngofficeuifabric-todo%20-%20).
+
+For questions regarding this sample, [create a new question](https://github.com/pnp/sp-dev-fx-webparts/issues/new?assignees=&labels=Needs%3A+Triage+%3Amag%3A%2Ctype%3Abug-suspected&template=question.yml&sample=angular-ngofficeuifabric-todo&authors=@waldekmastykarz&title=angular-ngofficeuifabric-todo%20-%20).
+
+Finally, if you have an idea for improvement, [make a suggestion](https://github.com/pnp/sp-dev-fx-webparts/issues/new?assignees=&labels=Needs%3A+Triage+%3Amag%3A%2Ctype%3Abug-suspected&template=suggestion.yml&sample=angular-ngofficeuifabric-todo&authors=@waldekmastykarz&title=angular-ngofficeuifabric-todo%20-%20).
 
 <img src="https://telemetry.sharepointpnp.com/sp-dev-fx-webparts/samples/angular-ngofficeuifabric-todo" />

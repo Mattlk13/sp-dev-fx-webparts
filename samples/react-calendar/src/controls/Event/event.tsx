@@ -4,6 +4,7 @@ import * as strings from 'CalendarWebPartStrings';
 import { IEventProps } from './IEventProps';
 import { IEventState } from './IEventState';
 import * as moment from 'moment';
+import { parseString } from 'xml2js';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import { PeoplePicker, PrincipalType } from "@pnp/spfx-controls-react/lib/PeoplePicker";
 import {
@@ -43,12 +44,14 @@ import spservices from '../../services/spservices';
 import { Map, ICoordinates, MapType } from "@pnp/spfx-controls-react/lib/Map";
 import { EventRecurrenceInfo } from '../../controls/EventRecurrenceInfo/EventRecurrenceInfo';
 import { getGUID } from '@pnp/common';
+import { toLocaleShortDateString } from '../../utils/dateUtils';
+const format = require('string-format');
 
 const DayPickerStrings: IDatePickerStrings = {
   months: [strings.January, strings.February, strings.March, strings.April, strings.May, strings.June, strings.July, strings.August, strings.September, strings.October, strings.November, strings.December],
   shortMonths: [strings.Jan, strings.Feb, strings.Mar, strings.Apr, strings.May, strings.Jun, strings.Jul, strings.Aug, strings.Sep, strings.Oct, strings.Nov, strings.Dez],
   days: [strings.Sunday, strings.Monday, strings.Tuesday, strings.Wednesday, strings.Thursday, strings.Friday, strings.Saturday],
-  shortDays: [strings.ShortDay_S, strings.ShortDay_M, strings.ShortDay_T, strings.ShortDay_W, strings.ShortDay_Tursday, strings.ShortDay_Friday, strings.ShortDay_Saunday],
+  shortDays: [strings.ShortDay_S, strings.ShortDay_M, strings.ShortDay_T, strings.ShortDay_W, strings.ShortDay_Thursday, strings.ShortDay_Friday, strings.ShortDay_Sunday],
   goToToday: strings.GoToDay,
   prevMonthAriaLabel: strings.PrevMonth,
   nextMonthAriaLabel: strings.NextMonth,
@@ -76,7 +79,6 @@ export class Event extends React.Component<IEventProps, IEventState> {
       navigator.geolocation.getCurrentPosition((position) => {
         this.latitude = position.coords.latitude;
         this.longitude = position.coords.longitude;
-
       });
     } else {
       /* geolocation IS NOT available */
@@ -101,10 +103,11 @@ export class Event extends React.Component<IEventProps, IEventState> {
       isSaving: false,
       displayDialog: false,
       isloading: false,
+      isAllDayEvent: this.props.event && this.props.event.fAllDayEvent,
       siteRegionalSettings: undefined,
       recurrenceSeriesEdited: false,
-      showRecurrenceSeriesInfo:false,
-      newRecurrenceEvent:false,
+      showRecurrenceSeriesInfo: false,
+      newRecurrenceEvent: false,
       recurrenceAction: 'display',
       userPermissions: { hasPermissionAdd: false, hasPermissionDelete: false, hasPermissionEdit: false, hasPermissionView: false },
     };
@@ -145,13 +148,15 @@ export class Event extends React.Component<IEventProps, IEventState> {
    * @memberof Event
    */
   private async onSave() {
-
     let eventData: IEventData = this.state.eventData;
     let panelMode = this.props.panelMode;
-
     let startDate: string = null;
     let endDate: string = null;
     eventData.fRecurrence = false;
+
+    // set All day event
+    eventData.fAllDayEvent = this.state.isAllDayEvent;
+
     // if there are new Event recurrence or Edited recurrence series
     if (this.state.recurrenceSeriesEdited || this.state.newRecurrenceEvent) {
       eventData.RecurrenceData = this.returnedRecurrenceInfo.recurrenceData;
@@ -160,41 +165,42 @@ export class Event extends React.Component<IEventProps, IEventState> {
 
       if (eventData.EventType == "0" && this.state.newRecurrenceEvent) {
         eventData.EventType = "1";
-        eventData.fRecurrence= true;
-        eventData.UID = getGUID();
-      }
-      if (eventData.EventType == "1" && this.state.recurrenceSeriesEdited) {
-        eventData.fRecurrence= true;
+        eventData.fRecurrence = true;
         eventData.UID = getGUID();
       }
 
-    } else {
-      if (this.state.eventData.EventType  == '1'){ // recurrence exception
-        eventData.RecurrenceID = eventData.EventDate.toString();
+      if (eventData.EventType == "1" && this.state.recurrenceSeriesEdited) {
+        eventData.fRecurrence = true;
+        eventData.UID = getGUID();
+      }
+    }
+    else {
+      if (this.state.eventData.EventType == '1') { // recurrence exception
+        eventData.RecurrenceID = eventData.EventDate;
         eventData.MasterSeriesItemID = eventData.ID.toString();
         eventData.EventType = "4";
         eventData.fRecurrence = true;
         eventData.UID = getGUID();
         panelMode = IPanelModelEnum.add;
+        eventData.RecurrenceData = await this.returnExceptionRecurrenceInfo(eventData.RecurrenceData);
       }
       startDate = `${moment(this.state.startDate).format('YYYY/MM/DD')}`;
       endDate = `${moment(this.state.endDate).format('YYYY/MM/DD')}`;
     }
 
-
+    // Start Date
     const startTime = `${this.state.startSelectedHour.key}:${this.state.startSelectedMin.key}`;
     const startDateTime = `${startDate} ${startTime}`;
     const start = moment(startDateTime, 'YYYY/MM/DD HH:mm').toLocaleString();
     eventData.EventDate = new Date(start);
+
     // End Date
     const endTime = `${this.state.endSelectedHour.key}:${this.state.endSelectedMin.key}`;
     const endDateTime = `${endDate} ${endTime}`;
     const end = moment(endDateTime, 'YYYY/MM/DD HH:mm').toLocaleString();
     eventData.EndDate = new Date(end);
 
-
     // get Geolocation
-
     eventData.geolocation = { Latitude: this.latitude, Longitude: this.longitude };
     const locationInfo = await this.spService.getGeoLactionName(this.latitude, this.longitude);
     eventData.location = locationInfo ? locationInfo.display_name : 'N/A';
@@ -209,7 +215,6 @@ export class Event extends React.Component<IEventProps, IEventState> {
 
     try {
       for (const user of this.attendees) {
-
         const userInfo: any = await this.spService.getUserByLoginName(user.id, this.props.siteUrl);
         eventData.attendes.push(Number(userInfo.Id));
       }
@@ -251,14 +256,14 @@ export class Event extends React.Component<IEventProps, IEventState> {
    * @param {number} [eventId]
    * @memberof Event
    */
-  private async  renderEventData(eventId?: number) {
+  private async renderEventData(eventId?: number) {
 
     this.setState({ isloading: true });
     const event: IEventData = !eventId ? this.props.event : await this.spService.getEvent(this.props.siteUrl, this.props.listId, eventId);
 
     let editorState: EditorState;
     // Load Regional Settings
-    const siteRegionalSettigns = await this.spService.getSiteRegionalSettingsTimeZone(this.props.siteUrl);
+    const siteRegionalSettings = await this.spService.getSiteRegionalSettingsTimeZone(this.props.siteUrl);
     // chaeck User list Permissions
     const userListPermissions: IUserPermissions = await this.spService.getUserPermissions(this.props.siteUrl, this.props.listId);
     // Load Categories
@@ -298,6 +303,8 @@ export class Event extends React.Component<IEventProps, IEventState> {
 
       event.geolocation.Latitude = this.latitude;
       event.geolocation.Longitude = this.longitude;
+
+      const recurrenceInfo = event.EventType === "4" && event.MasterSeriesItemID !== "" ? event.RecurrenceData : await this.returnExceptionRecurrenceInfo(event.RecurrenceData);
       // Update Component Data
       this.setState({
         eventData: event,
@@ -311,9 +318,10 @@ export class Event extends React.Component<IEventProps, IEventState> {
         selectedUsers: selectedUsers,
         userPermissions: userListPermissions,
         isloading: false,
-        siteRegionalSettings: siteRegionalSettigns,
+        siteRegionalSettings: siteRegionalSettings,
         locationLatitude: this.latitude,
         locationLongitude: this.longitude,
+        recurrenceDescription: recurrenceInfo
       });
     } else {
       editorState = EditorState.createEmpty();
@@ -323,7 +331,7 @@ export class Event extends React.Component<IEventProps, IEventState> {
         editorState: editorState,
         userPermissions: userListPermissions,
         isloading: false,
-        siteRegionalSettings: siteRegionalSettigns,
+        siteRegionalSettings: siteRegionalSettings,
         eventData: { ...event, EventType: "0" },
       });
     }
@@ -336,8 +344,6 @@ export class Event extends React.Component<IEventProps, IEventState> {
    * @memberof Event
    */
   public async componentDidMount() {
-
-
     await this.renderEventData();
   }
 
@@ -474,7 +480,7 @@ export class Event extends React.Component<IEventProps, IEventState> {
       this.setState({ isDeleting: false });
       this.props.onDissmissPanel(true);
     } catch (error) {
-      this.setState({ hasError: true, errorMessage: error.message, isDeleting: false, displayDialog:false });
+      this.setState({ hasError: true, errorMessage: error.message, isDeleting: false, displayDialog: false });
     }
   }
 
@@ -566,6 +572,282 @@ export class Event extends React.Component<IEventProps, IEventState> {
   }
 
   /**
+   * 
+   * 
+   * @private
+   * @param {string} rule 
+   * @memberof Event
+   */
+  private parseDailyRule(rule): string {
+    const keys = Object.keys(rule);
+    if (keys.indexOf("weekday") !== -1 && rule["weekday"] === "TRUE")
+      return format("{} {}", format(strings.everyFormat, 1), strings.weekDayLabel);
+
+    if (keys.indexOf("dayFrequency") !== -1) {
+      const dayFrequency: number = parseInt(rule["dayFrequency"]);
+      const frequencyFormat = dayFrequency === 1 ? strings.everyFormat : dayFrequency === 2 ? strings.everySecondFormat : strings.everyNthFormat;
+      return format("{} {}", format(frequencyFormat, dayFrequency), strings.dayLable);
+    }
+
+    return "Invalid recurrence format";
+  }
+
+  /**
+   * 
+   * 
+   * @private
+   * @param { string } rule
+   * @memberof Event 
+   */
+  private parseWeeklyRule(rule): string {
+    const frequency: number = parseInt(rule["weekFrequency"]);
+    const keys = Object.keys(rule);
+    const dayMap: any = {
+      "mo": strings.Monday,
+      "tu": strings.Tuesday,
+      "we": strings.Wednesday,
+      "th": strings.Thursday,
+      "fr": strings.Friday,
+      "sa": strings.Saturday,
+      "su": strings.Sunday
+    };
+    let days: string[] = [];
+    for (let key of keys) {
+      days.push(dayMap[key]);
+    }
+
+    return format("{}{} {} {}",
+      frequency === 1 ? format(strings.everyFormat, frequency) : frequency === 2 ? format(strings.everySecondFormat, frequency) : format(strings.everyNthFormat, frequency),
+      strings.weekLabel,
+      strings.onLabel,
+      days.join(", "));
+  }
+
+  /**
+   * 
+   * 
+   * @private
+   * @param { string } rule 
+   * @memberof Event
+   */
+  private parseMonthlyRule(rule): string {
+    const frequency: number = parseInt(rule["monthFrequency"]);
+    const day: number = parseInt(rule["day"]);
+
+    return format("{}{} {}",
+      frequency === 1 ? format(strings.everyFormat, frequency) : frequency === 2 ? format(strings.everySecondFormat, frequency) : format(strings.everyNthFormat, frequency),
+      strings.monthLabel,
+      format(strings.onTheDayFormat, day)
+    );
+  }
+
+  /**
+   * 
+   * @private
+   * @param { string } rule 
+   * @memberof Event
+   */
+  private parseMonthlyByDayRule(rule): string {
+    let keys: string[] = Object.keys(rule);
+    const dayTypeMap: any = {
+      "day": strings.weekDayLabel,
+      "weekend_day": strings.weekEndDay,
+      "mo": strings.Monday,
+      "tu": strings.Tuesday,
+      "we": strings.Wednesday,
+      "th": strings.Thursday,
+      "fr": strings.Friday,
+      "sa": strings.Saturday,
+      "su": strings.Sunday
+    };
+
+    const orderType: any = {
+      "first": strings.firstLabel,
+      "second": strings.secondLabel,
+      "third": strings.thirdLabel,
+      "fourth": strings.fourthLabel,
+      "last": strings.lastLabel
+    };
+
+    let order: string;
+    let dayType: string;
+    let frequencyFormat: string;
+
+    for (let key of keys) {
+      switch (key) {
+        case "monthFrequency":
+          const frequency = parseInt(rule[key]);
+          switch (frequency) {
+            case 1:
+              frequencyFormat = format(strings.everyFormat, frequency);
+              break;
+            case 2:
+              frequencyFormat = format(strings.everySecondFormat, frequency);
+              break;
+            default:
+              frequencyFormat = format(strings.everyNthFormat, frequency);
+              break;
+          }
+          break;
+        case "weekDayOfMonth":
+          order = orderType[rule[key]];
+          break;
+        default:
+          dayType = dayTypeMap[rule[key]];
+          break;
+      }
+    }
+
+    return format("{} {} {} {} {}{}",
+      frequencyFormat,
+      strings.monthLabel.toLowerCase(),
+      strings.onTheLabel,
+      order,
+      dayType,
+      strings.theSuffix);
+  }
+
+  /**
+   * 
+   * @private
+   * @param rule
+   * @memberof Event 
+   */
+  private parseYearlyRule(rule): string {
+    const keys: string[] = Object.keys(rule);
+    const months: string[] = DayPickerStrings.months;
+    let frequencyString: string;
+    let month: string;
+    let day: string;
+    for (let key of keys) {
+      switch (key) {
+        case "yearFrequency":
+          const frequency = parseInt(rule[key]);
+          const frequencyFormat = frequency == 1 ? strings.everyFormat : frequency == 2 ? strings.everySecondFormat : strings.everyNthFormat;
+          frequencyString = format(frequencyFormat, frequency);
+          break;
+        case "month":
+          month = months[parseInt(rule[key]) - 1];
+          break;
+        case "day":
+          day = rule[key];
+          break;
+      }
+    }
+
+    return format("{} {} {}", frequencyString, strings.yearLabel, format(strings.theNthOfMonthFormat, month, day));
+  }
+
+  /**
+   * 
+   * 
+   * @private
+   * @param rule 
+   * @memberof Event
+   */
+  private parseYearlyByDayRule(rule): string {
+    const keys: string[] = Object.keys(rule);
+    const months: string[] = DayPickerStrings.months;
+    const orderMap: any = {
+      "first": strings.firstLabel,
+      "second": strings.secondLabel,
+      "third": strings.thirdLabel,
+      "fourth": strings.fourthLabel,
+      "last": strings.lastLabel
+    };
+    const dayTypeMap: any = {
+      "day": strings.weekDayLabel,
+      "weekend_day": strings.weekEndDay,
+      "mo": strings.Monday,
+      "tu": strings.Tuesday,
+      "we": strings.Wednesday,
+      "th": strings.Thursday,
+      "fr": strings.Friday,
+      "sa": strings.Saturday,
+      "su": strings.Sunday
+    };
+    let frequencyString: string;
+    let month: string;
+    let order: string;
+    let dayTypeString: string;
+    for (let key of keys) {
+      switch (key) {
+        case "yearFrequency":
+          const frequency = parseInt(rule[key]);
+          const frequencyFormat = frequency === 1 ? strings.everyFormat : frequency === 2 ? strings.everySecondFormat : strings.everyNthFormat;
+          frequencyString = format(frequencyFormat, frequency);
+          break;
+        case "weekDayOfMonth":
+          order = orderMap[rule[key]];
+          break;
+        case "month":
+          month = months[parseInt(rule[key]) - 1];
+          break;
+        default:
+          dayTypeString = dayTypeMap[rule[key]];
+          break;
+      }
+
+      return format("{} {} {}",
+        frequencyString,
+        strings.yearLabel,
+        format(strings.onTheDayTypeFormat, order, dayTypeString.toLowerCase(), strings.theSuffix)
+      );
+    }
+  }
+
+  /**
+   * 
+   * 
+   * @private
+   * @param {string} recurrenceData
+   * @memberof Event 
+   */
+  private async returnExceptionRecurrenceInfo(recurrenceData: string) {
+    const promise = new Promise<object>((resolve, reject) => {
+      parseString(recurrenceData, (err, result) => {
+        if (err) {
+          reject(err);
+        }
+
+        resolve(result);
+      });
+    });
+
+    const recurrenceInfo: any = await promise;
+    if (recurrenceInfo != null) {
+      let keys = Object.keys(recurrenceInfo.recurrence.rule[0].repeat[0]);
+      const recurrenceTypes = ["daily", "weekly", "monthly", "monthlyByDay", "yearly", "yearlyByDay"];
+      for (var key of keys) {
+        const rule = recurrenceInfo.recurrence.rule[0].repeat[0][key][0]['$'];
+        switch (recurrenceTypes.indexOf(key)) {
+          case 0:
+            return this.parseDailyRule(rule);
+            break;
+          case 1:
+            return this.parseWeeklyRule(rule);
+            break;
+          case 2:
+            return this.parseMonthlyRule(rule);
+            break;
+          case 3:
+            return this.parseMonthlyByDayRule(rule);
+            break;
+          case 4:
+            return this.parseYearlyRule(rule);
+            break;
+          case 5:
+            return this.parseYearlyByDayRule(rule);
+            break;
+          default:
+            continue;
+        }
+      }
+    }
+  }
+
+
+  /**
    *
    *
    * @param {Date} startDate
@@ -578,6 +860,7 @@ export class Event extends React.Component<IEventProps, IEventState> {
     //console.log(this.returnedRecurrenceInfo);
   }
 
+
   /**
    *
    *
@@ -587,6 +870,7 @@ export class Event extends React.Component<IEventProps, IEventState> {
   public render(): React.ReactElement<IEventProps> {
 
     const { editorState } = this.state;
+
     return (
       <div>
         <Panel
@@ -614,16 +898,17 @@ export class Event extends React.Component<IEventProps, IEventState> {
               <div>
                 {
                   (this.state.eventData && (this.state.eventData.EventType !== "0" && this.state.showRecurrenceSeriesInfo !== true)) ?
-                  <div>
-                      <h2 style={{ display: 'inline-block', verticalAlign: 'top' }}>Recurrence Event</h2>
+                    <div>
+                      <h2 style={{ display: 'inline-block', verticalAlign: 'top' }}>{strings.recurrenceEventLabel}</h2>
+                      {this.state.recurrenceDescription ? <span style={{ display: 'block' }} >{this.state.recurrenceDescription}</span> : null}
                       <DefaultButton
                         style={{ display: 'inline-block', marginLeft: '330px', verticalAlign: 'top', width: 'auto' }}
                         iconProps={{ iconName: 'RecurringEvent' }}
                         allowDisabledFocus={true}
                         onClick={this.onEditRecurrence}
                       >
-                        Edit Recurrence Series
-                     </DefaultButton>
+                        {strings.editRecurrenceSeries}
+                      </DefaultButton>
 
                     </div>
                     : ''
@@ -658,66 +943,71 @@ export class Event extends React.Component<IEventProps, IEventState> {
                     value={this.state.startDate}
                     label={strings.StartDateLabel}
                     onSelectDate={this.onSelectDateStart}
+                    formatDate={toLocaleShortDateString}
                     disabled={this.state.userPermissions.hasPermissionAdd || this.state.userPermissions.hasPermissionEdit ? false : true}
                     hidden={this.state.showRecurrenceSeriesInfo}
                   />
                 </div>
-                <div style={{ display: 'inline-block', verticalAlign: 'top', paddingRight: 10 }}>
-                  <Dropdown
-                    selectedKey={this.state.startSelectedHour.key}
-                    onChange={this.onStartChangeHour}
-                    label={strings.StartHourLabel}
-                    disabled={this.state.userPermissions.hasPermissionAdd || this.state.userPermissions.hasPermissionEdit ? false : true}
-                    options={[
-                      { key: '00', text: '00' },
-                      { key: '01', text: '01' },
-                      { key: '02', text: '02' },
-                      { key: '03', text: '03' },
-                      { key: '04', text: '04' },
-                      { key: '05', text: '05' },
-                      { key: '06', text: '06' },
-                      { key: '07', text: '07' },
-                      { key: '08', text: '08' },
-                      { key: '09', text: '09' },
-                      { key: '10', text: '10' },
-                      { key: '11', text: '11' },
-                      { key: '12', text: '12' },
-                      { key: '13', text: '13' },
-                      { key: '14', text: '14' },
-                      { key: '15', text: '15' },
-                      { key: '16', text: '16' },
-                      { key: '17', text: '17' },
-                      { key: '18', text: '18' },
-                      { key: '19', text: '19' },
-                      { key: '20', text: '20' },
-                      { key: '21', text: '21' },
-                      { key: '22', text: '22' },
-                      { key: '23', text: '23' }
-                    ]}
-                  />
-                </div>
-                <div style={{ display: 'inline-block', verticalAlign: 'top', }}>
-                  <Dropdown
-                    label={strings.StartMinLabel}
-                    selectedKey={this.state.startSelectedMin.key}
-                    onChange={this.onStartChangeMin}
-                    disabled={this.state.userPermissions.hasPermissionAdd || this.state.userPermissions.hasPermissionEdit ? false : true}
-                    options={[
-                      { key: '00', text: '00' },
-                      { key: '05', text: '05' },
-                      { key: '10', text: '10' },
-                      { key: '15', text: '15' },
-                      { key: '20', text: '20' },
-                      { key: '25', text: '25' },
-                      { key: '30', text: '30' },
-                      { key: '35', text: '35' },
-                      { key: '40', text: '40' },
-                      { key: '45', text: '45' },
-                      { key: '50', text: '50' },
-                      { key: '55', text: '55' }
-                    ]}
-                  />
-                </div>
+                {!this.state.isAllDayEvent &&
+                  <div style={{ display: 'inline-block', verticalAlign: 'top', paddingRight: 10 }}>
+                    <Dropdown
+                      selectedKey={this.state.startSelectedHour.key}
+                      onChange={this.onStartChangeHour}
+                      label={strings.StartHourLabel}
+                      disabled={this.state.userPermissions.hasPermissionAdd || this.state.userPermissions.hasPermissionEdit ? false : true}
+                      options={[
+                        { key: '00', text: '00' },
+                        { key: '01', text: '01' },
+                        { key: '02', text: '02' },
+                        { key: '03', text: '03' },
+                        { key: '04', text: '04' },
+                        { key: '05', text: '05' },
+                        { key: '06', text: '06' },
+                        { key: '07', text: '07' },
+                        { key: '08', text: '08' },
+                        { key: '09', text: '09' },
+                        { key: '10', text: '10' },
+                        { key: '11', text: '11' },
+                        { key: '12', text: '12' },
+                        { key: '13', text: '13' },
+                        { key: '14', text: '14' },
+                        { key: '15', text: '15' },
+                        { key: '16', text: '16' },
+                        { key: '17', text: '17' },
+                        { key: '18', text: '18' },
+                        { key: '19', text: '19' },
+                        { key: '20', text: '20' },
+                        { key: '21', text: '21' },
+                        { key: '22', text: '22' },
+                        { key: '23', text: '23' }
+                      ]}
+                    />
+                  </div>
+                }
+                {!this.state.isAllDayEvent &&
+                  <div style={{ display: 'inline-block', verticalAlign: 'top', }}>
+                    <Dropdown
+                      label={strings.StartMinLabel}
+                      selectedKey={this.state.startSelectedMin.key}
+                      onChange={this.onStartChangeMin}
+                      disabled={this.state.userPermissions.hasPermissionAdd || this.state.userPermissions.hasPermissionEdit ? false : true}
+                      options={[
+                        { key: '00', text: '00' },
+                        { key: '05', text: '05' },
+                        { key: '10', text: '10' },
+                        { key: '15', text: '15' },
+                        { key: '20', text: '20' },
+                        { key: '25', text: '25' },
+                        { key: '30', text: '30' },
+                        { key: '35', text: '35' },
+                        { key: '40', text: '40' },
+                        { key: '45', text: '45' },
+                        { key: '50', text: '50' },
+                        { key: '55', text: '55' }
+                      ]}
+                    />
+                  </div>
+                }
                 <br />
                 <div style={{ display: 'inline-block', verticalAlign: 'top', paddingRight: 10 }}>
                   <DatePicker
@@ -729,79 +1019,99 @@ export class Event extends React.Component<IEventProps, IEventState> {
                     value={this.state.endDate}
                     label={strings.EndDateLabel}
                     onSelectDate={this.onSelectDateEnd}
+                    formatDate={toLocaleShortDateString}
                     disabled={this.state.userPermissions.hasPermissionAdd || this.state.userPermissions.hasPermissionEdit ? false : true}
                     hidden={this.state.showRecurrenceSeriesInfo}
                   />
                 </div>
-                <div style={{ display: 'inline-block', verticalAlign: 'top', paddingRight: 10 }}>
-                  <Dropdown
-                    selectedKey={this.state.endSelectedHour.key}
-                    onChange={this.onEndChangeHour}
-                    label={strings.EndHourLabel}
-                    disabled={this.state.userPermissions.hasPermissionAdd || this.state.userPermissions.hasPermissionEdit ? false : true}
-                    options={[
-                      { key: '00', text: '00' },
-                      { key: '01', text: '01' },
-                      { key: '02', text: '02' },
-                      { key: '03', text: '03' },
-                      { key: '04', text: '04' },
-                      { key: '05', text: '05' },
-                      { key: '06', text: '06' },
-                      { key: '07', text: '07' },
-                      { key: '08', text: '08' },
-                      { key: '09', text: '09' },
-                      { key: '10', text: '10' },
-                      { key: '11', text: '11' },
-                      { key: '12', text: '12' },
-                      { key: '13', text: '13' },
-                      { key: '14', text: '14' },
-                      { key: '15', text: '15' },
-                      { key: '16', text: '16' },
-                      { key: '17', text: '17' },
-                      { key: '18', text: '18' },
-                      { key: '19', text: '19' },
-                      { key: '20', text: '20' },
-                      { key: '21', text: '21' },
-                      { key: '22', text: '22' },
-                      { key: '23', text: '23' }
-                    ]}
-                  />
-                </div>
-                <div style={{ display: 'inline-block', verticalAlign: 'top', }}>
-                  <Dropdown
-                    label={strings.EndMinLabel}
-                    selectedKey={this.state.endSelectedMin.key}
-                    onChange={this.onEndChangeMin}
-                    disabled={this.state.userPermissions.hasPermissionAdd || this.state.userPermissions.hasPermissionEdit ? false : true}
-                    options={[
-                      { key: '00', text: '00' },
-                      { key: '05', text: '05' },
-                      { key: '10', text: '10' },
-                      { key: '15', text: '15' },
-                      { key: '20', text: '20' },
-                      { key: '25', text: '25' },
-                      { key: '30', text: '30' },
-                      { key: '35', text: '35' },
-                      { key: '40', text: '40' },
-                      { key: '45', text: '45' },
-                      { key: '50', text: '50' },
-                      { key: '55', text: '55' },
-                      { key: '59', text: '59' }
-                    ]}
-                  />
-                </div>
+                {!this.state.isAllDayEvent &&
+                  <div style={{ display: 'inline-block', verticalAlign: 'top', paddingRight: 10 }}>
+                    <Dropdown
+                      selectedKey={this.state.endSelectedHour.key}
+                      onChange={this.onEndChangeHour}
+                      label={strings.EndHourLabel}
+                      disabled={this.state.userPermissions.hasPermissionAdd || this.state.userPermissions.hasPermissionEdit ? false : true}
+                      options={[
+                        { key: '00', text: '00' },
+                        { key: '01', text: '01' },
+                        { key: '02', text: '02' },
+                        { key: '03', text: '03' },
+                        { key: '04', text: '04' },
+                        { key: '05', text: '05' },
+                        { key: '06', text: '06' },
+                        { key: '07', text: '07' },
+                        { key: '08', text: '08' },
+                        { key: '09', text: '09' },
+                        { key: '10', text: '10' },
+                        { key: '11', text: '11' },
+                        { key: '12', text: '12' },
+                        { key: '13', text: '13' },
+                        { key: '14', text: '14' },
+                        { key: '15', text: '15' },
+                        { key: '16', text: '16' },
+                        { key: '17', text: '17' },
+                        { key: '18', text: '18' },
+                        { key: '19', text: '19' },
+                        { key: '20', text: '20' },
+                        { key: '21', text: '21' },
+                        { key: '22', text: '22' },
+                        { key: '23', text: '23' }
+                      ]}
+                    />
+                  </div>
+                }
+                {!this.state.isAllDayEvent &&
+                  <div style={{ display: 'inline-block', verticalAlign: 'top', }}>
+                    <Dropdown
+                      label={strings.EndMinLabel}
+                      selectedKey={this.state.endSelectedMin.key}
+                      onChange={this.onEndChangeMin}
+                      disabled={this.state.userPermissions.hasPermissionAdd || this.state.userPermissions.hasPermissionEdit ? false : true}
+                      options={[
+                        { key: '00', text: '00' },
+                        { key: '05', text: '05' },
+                        { key: '10', text: '10' },
+                        { key: '15', text: '15' },
+                        { key: '20', text: '20' },
+                        { key: '25', text: '25' },
+                        { key: '30', text: '30' },
+                        { key: '35', text: '35' },
+                        { key: '40', text: '40' },
+                        { key: '45', text: '45' },
+                        { key: '50', text: '50' },
+                        { key: '55', text: '55' },
+                        { key: '59', text: '59' }
+                      ]}
+                    />
+                  </div>
+                }
                 <Label>{this.state.siteRegionalSettings ? this.state.siteRegionalSettings.Description : ''}</Label>
                 <br />
-                {
 
+                <div style={{ display: 'inline-block', verticalAlign: 'top', width: '200px' }}>
+                  <Toggle
+                    defaultChecked={this.state.eventData && this.state.eventData.fAllDayEvent}
+                    inlineLabel={true}
+                    label={strings.allDayEventLabel}
+                    onText={strings.onLabel}
+                    offText={strings.offLabel}
+                    onChange={(ev, checked: boolean) => {
+                      ev.preventDefault();
+                      this.setState({ isAllDayEvent: checked });
+                    }}
+                  />
+                </div>
+                <br />
+
+                {
                   this.state.eventData && (this.state.eventData.EventType == "0") ?
                     <div style={{ display: 'inline-block', verticalAlign: 'top', width: '200px' }}>
                       <Toggle
                         defaultChecked={false}
                         inlineLabel={true}
-                        label="Recurrence ?"
-                        onText="On"
-                        offText="Off"
+                        label={strings.ifRecurrenceLabel}
+                        onText={strings.onLabel}
+                        offText={strings.offLabel}
                         onChange={(ev, checked: boolean) => {
                           ev.preventDefault();
                           this.setState({ showRecurrenceSeriesInfo: checked, newRecurrenceEvent: checked });
@@ -822,12 +1132,11 @@ export class Event extends React.Component<IEventProps, IEventState> {
                       siteUrl={this.props.siteUrl}
                       returnRecurrenceData={this.returnRecurrenceInfo}
                     >
-
                     </EventRecurrenceInfo>
                   )
                 }
 
-                < Label > Event Description</Label>
+                <Label>{strings.eventDescriptionLabel}</Label>
 
                 <div className={styles.description}>
                   <Editor
@@ -838,7 +1147,6 @@ export class Event extends React.Component<IEventProps, IEventState> {
                 </div>
                 <div>
                   <PeoplePicker
-
                     webAbsoluteUrl={this.props.siteUrl}
                     context={this.props.context}
                     titleText={strings.AttendeesLabel}
@@ -883,7 +1191,7 @@ export class Event extends React.Component<IEventProps, IEventState> {
                   styles: { main: { maxWidth: 450 } }
                 }}
               >
-                <Label >{strings.ConfirmeDeleteMessage}</Label>
+                 <Label>{this.state.recurrenceSeriesEdited ? strings.ConfirmeDeleteAllRecurrrencesMessage : strings.ConfirmeDeleteOneRecurrenceMessage }</Label>
                 {
                   this.state.isDeleting &&
                   <Spinner size={SpinnerSize.medium} ariaLabel={strings.SpinnerDeletingLabel} />

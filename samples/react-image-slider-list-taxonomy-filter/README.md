@@ -1,7 +1,7 @@
 # Image Slider from Photo Gallery using Taxonomy Filter
 
 ## Summary
-This webpart display the image in slider based on the filter of Taxonomy from Property panel. Images are stored in PhotoGallery and tagged with Taxonomy. This web part showcase 3 important implementation.
+This web part display the image in slider based on the filter of Taxonomy from Property panel. Images are stored in PhotoGallery and tagged with Taxonomy. This web part showcase 3 important implementation.
 
 - How to add the Terms in the propertypage and pass the values to react component
 - How to filter the list based on Taxonomy and extract the Image URL
@@ -10,12 +10,12 @@ This webpart display the image in slider based on the filter of Taxonomy from Pr
 ![preview](./assets/ImageSlider.gif)
 
 ## Used SharePoint Framework Version 
-![drop](https://img.shields.io/badge/version-GA-green.svg)
+![drop](https://img.shields.io/badge/version-1.6.0-green.svg)
 
 ## Applies to
 
-* [SharePoint Framework](https:/dev.office.com/sharepoint)
-* [Office 365 tenant](https://dev.office.com/sharepoint/docs/spfx/set-up-your-development-environment)
+* [SharePoint Framework](https://docs.microsoft.com/sharepoint/dev/spfx/sharepoint-framework-overview)
+* [Office 365 tenant](https://docs.microsoft.com/sharepoint/dev/spfx/set-up-your-development-environment)
 
 ## Prerequisites
  
@@ -35,6 +35,7 @@ Version|Date|Comments
 1.0|March 1, 2019 |Initial release
 
 ## Disclaimer
+
 **THIS CODE IS PROVIDED *AS IS* WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING ANY IMPLIED WARRANTIES OF FITNESS FOR A PARTICULAR PURPOSE, MERCHANTABILITY, OR NON-INFRINGEMENT.**
 
 ---
